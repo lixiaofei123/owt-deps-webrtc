@@ -14,8 +14,6 @@ import static org.webrtc.MediaCodecUtils.EXYNOS_PREFIX;
 import static org.webrtc.MediaCodecUtils.INTEL_PREFIX;
 import static org.webrtc.MediaCodecUtils.NVIDIA_PREFIX;
 import static org.webrtc.MediaCodecUtils.QCOM_PREFIX;
-import static org.webrtc.MediaCodecUtils.HISI_PREFIX;
-import static org.webrtc.MediaCodecUtils.IMG_PREFIX;
 
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecInfo.CodecCapabilities;
@@ -29,8 +27,7 @@ import javax.annotation.Nullable;
 @SuppressWarnings("deprecation") // API level 16 requires use of deprecated methods.
 public class HardwareVideoDecoderFactory implements VideoDecoderFactory {
   private static final String TAG = "HardwareVideoDecoderFactory";
-  private final VideoCapabilityParser vcp = new VideoCapabilityParser();
-  private final String extraMediaCodecFile = "sdcard/mediaCodec.xml";
+
   private final EglBase.Context sharedContext;
 
   /** Creates a HardwareVideoDecoderFactory that does not use surface textures. */
@@ -69,8 +66,7 @@ public class HardwareVideoDecoderFactory implements VideoDecoderFactory {
     // Generate a list of supported codecs in order of preference:
     // VP8, VP9, H264 (high profile), and H264 (baseline profile).
     for (VideoCodecType type :
-        new VideoCodecType[] {VideoCodecType.VP8, VideoCodecType.VP9, VideoCodecType.H264,
-            VideoCodecType.H265}) {
+        new VideoCodecType[] {VideoCodecType.VP8, VideoCodecType.VP9, VideoCodecType.H264}) {
       MediaCodecInfo codec = findCodecForType(type);
       if (codec != null) {
         String name = type.name();
@@ -132,29 +128,14 @@ public class HardwareVideoDecoderFactory implements VideoDecoderFactory {
       case VP8:
         // QCOM, Intel, Exynos, and Nvidia all supported for VP8.
         return name.startsWith(QCOM_PREFIX) || name.startsWith(INTEL_PREFIX)
-            || name.startsWith(EXYNOS_PREFIX) || name.startsWith(NVIDIA_PREFIX)
-            // Hisi seems to support VP8.
-            || name.startsWith(HISI_PREFIX) || name.startsWith(IMG_PREFIX)
-            || vcp.isExtraHardwareSupported(name, "video/x-vnd.on2.vp8", vcp.parseWithTag(vcp.loadWithDom(extraMediaCodecFile), "Decoders"));
+            || name.startsWith(EXYNOS_PREFIX) || name.startsWith(NVIDIA_PREFIX);
       case VP9:
         // QCOM and Exynos supported for VP9.
-        return name.startsWith(QCOM_PREFIX) || name.startsWith(EXYNOS_PREFIX)
-            // Hisi seems to support VP9.
-            || name.startsWith(HISI_PREFIX) || name.startsWith(IMG_PREFIX)
-            || vcp.isExtraHardwareSupported(name, "video/x-vnd.on2.vp9", vcp.parseWithTag(vcp.loadWithDom(extraMediaCodecFile), "Decoders"));
+        return name.startsWith(QCOM_PREFIX) || name.startsWith(EXYNOS_PREFIX);
       case H264:
         // QCOM, Intel, and Exynos supported for H264.
         return name.startsWith(QCOM_PREFIX) || name.startsWith(INTEL_PREFIX)
-            // Hisi seems to support H264.
-            || name.startsWith(EXYNOS_PREFIX) || name.startsWith(HISI_PREFIX)
-            || name.startsWith(IMG_PREFIX)
-            || vcp.isExtraHardwareSupported(name, "video/avc", vcp.parseWithTag(vcp.loadWithDom(extraMediaCodecFile), "Decoders"));
-      case H265:
-        // H265 is copied from H264. More testing is needed.
-        return name.startsWith(QCOM_PREFIX) || name.startsWith(INTEL_PREFIX)
-            || name.startsWith(EXYNOS_PREFIX) || name.startsWith(HISI_PREFIX)
-            || name.startsWith(IMG_PREFIX)
-            || vcp.isExtraHardwareSupported(name, "video/hevc", vcp.parseWithTag(vcp.loadWithDom(extraMediaCodecFile), "Decoders"));
+            || name.startsWith(EXYNOS_PREFIX);
       default:
         return false;
     }

@@ -39,6 +39,7 @@
 .sw?
 /Makefile
 /base
+/build
 /buildtools
 /ios
 /mojo
