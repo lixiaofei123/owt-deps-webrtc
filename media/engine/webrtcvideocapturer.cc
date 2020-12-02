@@ -145,26 +145,9 @@ bool WebRtcVideoCapturer::Init(const Device& device) {
     char vcm_name[256];
     if (info->GetDeviceName(index, vcm_name, arraysize(vcm_name), vcm_id,
                             arraysize(vcm_id)) != -1) {
-      if (device.id == reinterpret_cast<char*>(vcm_id)) {
+      if (device.name == reinterpret_cast<char*>(vcm_name)) {
         found = true;
         break;
-      }
-    }
-  }
-  // Comparing ID first, if failed, fallback to compare name.
-  // TODO(jianjun): Remove name comparison when this behavior has been changed
-  // long enough.
-  if (!found) {
-    for (int index = 0; index < num_cams; ++index) {
-      char vcm_name[256];
-      if (info->GetDeviceName(index, vcm_name, arraysize(vcm_name), vcm_id,
-                              arraysize(vcm_id)) != -1) {
-        if (device.name == reinterpret_cast<char*>(vcm_name)) {
-          RTC_LOG(LS_WARNING) << "Getting camera device by name is deprecated, "
-                             "please use unique ID instead.";
-          found = true;
-          break;
-        }
       }
     }
   }

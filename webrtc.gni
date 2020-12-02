@@ -11,7 +11,6 @@ import("//build/config/mips.gni")
 import("//build/config/sanitizers/sanitizers.gni")
 import("//build/config/ui.gni")
 import("//build_overrides/build.gni")
-import("//build_overrides/ssl/ssl.gni")
 
 if (!build_with_chromium && is_component_build) {
   print("The Gn argument `is_component_build` is currently " +
@@ -71,7 +70,7 @@ declare_args() {
 
   # Used to specify an external OpenSSL include path when not compiling the
   # library that comes with WebRTC (i.e. rtc_build_ssl == 0).
-  rtc_ssl_root = woogeen_openssl_header_root
+  rtc_ssl_root = ""
 
   # Selects fixed-point code where possible.
   rtc_prefer_fixed_point = false
@@ -183,7 +182,7 @@ declare_args() {
   rtc_build_libvpx = !build_with_mozilla
   rtc_libvpx_build_vp9 = !build_with_mozilla
   rtc_build_opus = !build_with_mozilla
-  rtc_build_ssl = !woogeen_use_openssl
+  rtc_build_ssl = !build_with_mozilla
   rtc_build_usrsctp = !build_with_mozilla
 
   # Enable libevent task queues on platforms that support it.
@@ -641,7 +640,7 @@ if (is_ios) {
     action("umbrella_header_$target_name") {
       forward_variables_from(invoker, [ "public_headers" ])
 
-      script = "../tools_webrtc/ios/generate_umbrella_header.py"
+      script = "//tools_webrtc/ios/generate_umbrella_header.py"
 
       outputs = [
         umbrella_header_path,
@@ -692,11 +691,9 @@ if (is_android) {
       # TODO(crbug.com/824679): Find out why this fails in Chromium
       if (!build_with_chromium) {
         javac_args += [
-          # TODO (hank): |_chromium_code| in |java_library_impl| broke due to our code structure presumably,
-          # TODO (hank): which caused that errorprone were not included. So temporarily comment out params below.
-          #"-Xep:ParameterNotNullable:ERROR",
-          #"-Xep:FieldMissingNullable:ERROR",
-          #"-Xep:ReturnMissingNullable:ERROR",
+          "-Xep:ParameterNotNullable:ERROR",
+          "-Xep:FieldMissingNullable:ERROR",
+          "-Xep:ReturnMissingNullable:ERROR",
         ]
       }
 
@@ -731,11 +728,9 @@ if (is_android) {
       # TODO(crbug.com/824679): Find out why this fails in Chromium
       if (!build_with_chromium) {
         javac_args += [
-          # TODO (hank): |_chromium_code| in |java_library_impl| broke due to our code structure presumably,
-          # TODO (hank): which caused that errorprone were not included. So temporarily comment out params below.
-          #"-Xep:ParameterNotNullable:ERROR",
-          #"-Xep:FieldMissingNullable:ERROR",
-          #"-Xep:ReturnMissingNullable:ERROR",
+          "-Xep:ParameterNotNullable:ERROR",
+          "-Xep:FieldMissingNullable:ERROR",
+          "-Xep:ReturnMissingNullable:ERROR",
         ]
       }
 
@@ -765,11 +760,9 @@ if (is_android) {
       # TODO(crbug.com/824679): Find out why this fails in Chromium
       if (!build_with_chromium) {
         javac_args += [
-          # TODO (hank): |_chromium_code| in |java_library_impl| broke due to our code structure presumably,
-          # TODO (hank): which caused that errorprone were not included. So temporarily comment out params below.
-          #"-Xep:ParameterNotNullable:ERROR",
-          #"-Xep:FieldMissingNullable:ERROR",
-          #"-Xep:ReturnMissingNullable:ERROR",
+          "-Xep:ParameterNotNullable:ERROR",
+          "-Xep:FieldMissingNullable:ERROR",
+          "-Xep:ReturnMissingNullable:ERROR",
         ]
       }
 

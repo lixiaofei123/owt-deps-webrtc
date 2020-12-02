@@ -655,8 +655,7 @@ rtc_static_library("rtc_numerics") {
 }
 
 rtc_source_set("rtc_json") {
-  visibility = [ "*" ]
-  testonly = false
+  testonly = true
   defines = []
   sources = [
     "json.cc",
@@ -872,10 +871,6 @@ rtc_static_library("rtc_base_generic") {
     deps += [ "//third_party/boringssl" ]
   } else {
     configs += [ ":external_ssl_library" ]
-  }
-
-  if (woogeen_use_openssl) {
-    configs += [ "//build_overrides/ssl:external_openssl" ]
   }
 
   if (is_android) {

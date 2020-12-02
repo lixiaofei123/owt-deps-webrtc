@@ -30,8 +30,6 @@ class MediaCodecUtils {
   static final String INTEL_PREFIX = "OMX.Intel.";
   static final String NVIDIA_PREFIX = "OMX.Nvidia.";
   static final String QCOM_PREFIX = "OMX.qcom.";
-  static final String HISI_PREFIX = "OMX.hisi.";
-  static final String IMG_PREFIX = "OMX.IMG.";
 
   // NV12 color format supported by QCOM codec, but not declared in MediaCodec -
   // see /hardware/qcom/media/mm-core/inc/OMX_QCOMExtns.h
@@ -84,7 +82,6 @@ class MediaCodecUtils {
     switch (type) {
       case VP8:
       case VP9:
-      case H265:
         return new HashMap<String, String>();
       case H264:
         return H264Utils.getDefaultH264Params(highProfile);

@@ -10,7 +10,6 @@
 
 #import "WebRTC/RTCPeerConnectionFactory.h"
 
-#include "api/peerconnectioninterface.h"
 #include "rtc_base/scoped_ref_ptr.h"
 
 namespace webrtc {
@@ -49,10 +48,6 @@ NS_ASSUME_NONNULL_BEGIN
                                     (nullable webrtc::AudioDeviceModule *)audioDeviceModule
                             audioProcessingModule:
                                 (rtc::scoped_refptr<webrtc::AudioProcessing>)audioProcessingModule;
-
-/* Initialize object with injectable native PeerConnection. */
-- (instancetype)initWithNativePeerConnectionFactory:
-    (rtc::scoped_refptr<webrtc::PeerConnectionFactoryInterface>)factory;
 
 @end
 
